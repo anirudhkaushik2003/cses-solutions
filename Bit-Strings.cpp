@@ -14,7 +14,22 @@ void solve()
     int n;
     cin >> n;
 
-    cout << (1<<n)%(int)(1e9+7) << endl;
+    long long ans = 1;
+    if (n < 32)
+    {
+        ans = ans << n;
+        cout << ans << endl;
+        return;
+    }
+    ans = ans << 32;
+    ans = ans % (long long)(1e9 + 7);
+    n-= 32;
+    while (n--)
+    {
+        ans = ans << 1;
+        ans = ans % (long long)(1e9 + 7);
+    }
+    cout << ans << endl;
 }
 
 int main()
