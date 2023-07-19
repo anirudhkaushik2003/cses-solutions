@@ -16,6 +16,11 @@ void solve()
 
     if (n <= 3)
     {
+        if(n == 1)
+        {
+            cout << 1 << endl;
+            return;
+        }
         cout << "NO SOLUTION" << endl;
     }
     else
