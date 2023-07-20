@@ -25,7 +25,21 @@ ll find(int node, int node_low, int node_high, int query_low, int query_high)
     int last_in_left = (node_low + node_high) / 2;
     return find((2 * node), node_low, last_in_left, query_low, query_high) + find((2 * node)+1, last_in_left + 1, node_high, query_low, query_high);
 }
+// recursive range update
+// void update(int node, int node_low, int node_high, int query_low, int query_high, int value)
+// {
+//     if (query_low <= node_low && node_high <= query_high)
+//     {
+//         segment_tree[node] += value; // leaf node case
+//     }
 
+//     int last_in_left = (node_low + node_high) >> 1;
+
+//     update(2 * node, node_low, last_in_left, query_low, query_high, value);
+//     update((2 * node) + 1, node_low, last_in_left, query_low, query_high, value);
+
+//     segment_tree[node] = segment_tree[2 * node] + segment_tree[2 * node + 1];
+// }
 void update(int n, int node, ll value)
 {
     segment_tree[n + node] = value;
