@@ -9,6 +9,46 @@ using namespace std;
 #define pii pair<int, int>
 #define vi vector<int>
 
+vll segment_tree;
+
+ll find(int node, int node_low, int node_high, int query_low, int query_high)
+{
+    if (query_low <= node_low && node_high <= query_high)
+    {
+        return segment_tree[node];
+    }
+    if (node_high < query_low || query_high < node_low)
+    {
+        return 0;
+    }
+
+    int last_in_left = (node_low + node_high) / 2;
+    return find((2 * node), node_low, last_in_left, query_low, query_high) + find((2 * node) + 1, last_in_left + 1, node_high, query_low, query_high);
+}
+// recursive range update
+// void update(int node, int node_low, int node_high, int query_low, int query_high, int value)
+// {
+//     if (query_low <= node_low && node_high <= query_high)
+//     {
+//         segment_tree[node] += value; // leaf node case
+//     }
+
+//     int last_in_left = (node_low + node_high) >> 1;
+
+//     update(2 * node, node_low, last_in_left, query_low, query_high, value);
+//     update((2 * node) + 1, node_low, last_in_left, query_low, query_high, value);
+
+//     segment_tree[node] = segment_tree[2 * node] + segment_tree[2 * node + 1];
+// }
+void update(int n, int node, ll value)
+{
+    segment_tree[n + node] = value;
+    for (int j = (n + node) >> 1; j >= 1; j >>= 1)
+    {
+        segment_tree[j] = segment_tree[2 * j] + segment_tree[2 * j + 1];
+    }
+}
+
 void solve()
 {
     int n, q;
@@ -20,34 +60,41 @@ void solve()
         cin >> x;
     }
 
+    while (__builtin_popcount(n) != 1)
+    {
+        v.pb(0); // make a power of 2 by padding with zeroes
+        n++;
+    }
     ll a, b, u;
     int type;
-    vll delta(n + 1, 0);
+    vll delta(n, 0);
+    segment_tree.resize(2 * n, 0);
 
     while (q--)
     {
         cin >> type;
         if (type == 1)
         {
-            cin >> a >> b >> u;
-
             // update
+            cin >> a >> b >> u;
             a--;
             b--;
-            delta[a] += u;
-            delta[b + 1] -= u;
+            // update(1, 0, n - 1, a, b, u);
+            update(n, a, segment_tree[n + a] + u);
+            if (b + 1 < n)
+                update(n, b + 1, segment_tree[n + b + 1] - u);
         }
         else
         {
             // find
             cin >> a;
             a--;
-            vll temp = delta;
-            for (int i = 1; i <= n; i++)
-            {
-                temp[i] += temp[i - 1];
-            }
-            cout << v[a] + temp[a] << endl;
+            // for (int i = 0; i < n; i++)
+            // {
+            //     cout << segment_tree[n + i] << " ";
+            // }
+            // cout << endl;
+            cout << v[a] + find(1, 0, n - 1, 0, a) << endl;
         }
     }
 }
