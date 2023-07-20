@@ -20,21 +20,17 @@ void solve()
         cin >> x;
     }
 
-    vll pre(n);
-    pre[0] = v[0];
-    for (int i = 1; i < n; i++)
+    vll pre(n + 1);
+    pre[0] = 0;
+    for (int i = 1; i <= n; i++)
     {
-        pre[i] = pre[i - 1] ^ v[i];
+        pre[i] = pre[i - 1] ^ v[i - 1];
     }
     int a, b;
     while (q--)
     {
         cin >> a >> b;
-        a--, b--;
-        if (a == 0)
-            cout << pre[b] << endl;
-        else
-            cout << (pre[b] ^ pre[a - 1]) << endl;
+        cout << (pre[b] ^ pre[a - 1]) << endl;
     }
 }
 
